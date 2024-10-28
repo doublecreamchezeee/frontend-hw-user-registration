@@ -20,7 +20,7 @@ const Auth = () => {
 
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
-    setMessage(''); // Clear message on tab change
+    setMessage('');
   };
 
   const handleSubmit = async (e) => {
@@ -38,58 +38,102 @@ const Auth = () => {
 
     const data = await response.json();
     if (response.ok) {
-        // Đăng nhập thành công, chuyển hướng đến trang Home
         navigate('/home');
       } else {
-        // Xử lý lỗi đăng nhập
-        alert('Login failed');
+        setMessage('Authentication failed. Please try again.');
       }
   };
 
   return (
-    <Container maxWidth="xs">
-      <Box sx={{ marginTop: 4, padding: 2, border: '1px solid #ccc', borderRadius: 2 }}>
-        <Typography variant="h4" gutterBottom>
-          {activeTab === 0 ? 'Login' : 'Register'}
-        </Typography>
-        
-        <Tabs value={activeTab} onChange={handleTabChange} centered>
-          <Tab label="Login" />
-          <Tab label="Register" />
-        </Tabs>
-
-        <form onSubmit={handleSubmit}>
-          <TextField
-            label="Email"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <TextField
-            label="Password"
-            type="password"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <Button variant="contained" color="primary" type="submit" fullWidth>
+    <Box
+      sx={{
+        background: 'linear-gradient(135deg, #ff7e5f, #feb47b)',
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <Container maxWidth="xs">
+        <Box
+          sx={{
+            marginTop: 4,
+            padding: 4,
+            borderRadius: 2,
+            backgroundColor: 'rgba(255, 255, 255, 0.8)',
+            boxShadow: 3,
+          }}
+        >
+          {/* <Typography variant="h4" gutterBottom align="center" color="primary">
             {activeTab === 0 ? 'Login' : 'Register'}
-          </Button>
-        </form>
+          </Typography> */}
+          
+          <Tabs
+            value={activeTab}
+            onChange={handleTabChange}
+            centered
+            sx={{
+              marginBottom: 2,
+              '& .MuiTab-root': {
+                color: '#ff7e5f',
+              },  
+              '& .Mui-selected': {
+                color: '#feb47b',
+              },
+              '& .MuiTabs-indicator': {
+                backgroundColor: '#feb47b',
+              },
+            }}
+          >
+            <Tab label="Login" />
+            <Tab label="Register" />
+          </Tabs>
 
-        {message && (
-          <Typography variant="body2" color="error" sx={{ marginTop: 2 }}>
-            {message}
-          </Typography>
-        )}
-      </Box>
-    </Container>
+          <form onSubmit={handleSubmit}>
+            <TextField
+              label="Email"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <TextField
+              label="Password"
+              type="password"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <Button
+              variant="contained"
+              fullWidth
+              type="submit"
+              sx={{
+                backgroundColor: '#ff7e5f',
+                color: '#fff',
+                marginTop: 2,
+                '&:hover': {
+                  backgroundColor: '#feb47b',
+                },
+              }}
+            >
+              {activeTab === 0 ? 'Login' : 'Register'}
+            </Button>
+          </form>
+
+          {message && (
+            <Typography variant="body2" color="error" sx={{ marginTop: 2, textAlign: 'center' }}>
+              {message}
+            </Typography>
+          )}
+        </Box>
+      </Container>
+    </Box>
   );
 };
 

@@ -27,23 +27,29 @@ const Auth = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const url = `${process.env.REACT_APP_API_URL}/${activeTab === 0 ? 'login' : 'register'}`;
-
+  
     try {
-      const response = await axios.post(url, { email, password }, {
+      const response = await fetch(url, {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          // No need to set Access-Control-Allow-Origin here; it should be configured in the backend
+          // 'Access-Control-Allow-Origin': '*', // Do not set this here; it's handled by the server
         },
+        mode: 'cors', // Set mode to 'cors' for cross-origin requests
+        body: JSON.stringify({ email, password }),
       });
-
-      if (response.status === 200 || response.status === 201) {
+  
+      if (response.ok) {
+        const data = await response.json();
+        // Handle success, e.g., navigate to home
         navigate('/home');
       } else {
-        setMessage('Authentication failed. Please try again.');
+        const errorData = await response.json();
+        setMessage(errorData.message || 'Authentication failed. Please try again.');
       }
     } catch (error) {
       setMessage('Authentication failed. Please try again.');
-      console.error(error); // Optional: log the error for debugging
+      console.error(error); // Log the error for debugging
     }
   };
 

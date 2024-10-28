@@ -10,6 +10,7 @@ import {
   Tab,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios'; // Import axios
 
 const Auth = () => {
   const [activeTab, setActiveTab] = useState(0);
@@ -27,21 +28,23 @@ const Auth = () => {
     e.preventDefault();
     const url = `${process.env.REACT_APP_API_URL}/${activeTab === 0 ? 'login' : 'register'}`;
 
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-      },
-      body: JSON.stringify({ email, password }),
-    });
+    try {
+      const response = await axios.post(url, { email, password }, {
+        headers: {
+          'Content-Type': 'application/json',
+          // No need to set Access-Control-Allow-Origin here; it should be configured in the backend
+        },
+      });
 
-    const data = await response.json();
-    if (response.ok) {
+      if (response.status === 200 || response.status === 201) {
         navigate('/home');
       } else {
         setMessage('Authentication failed. Please try again.');
       }
+    } catch (error) {
+      setMessage('Authentication failed. Please try again.');
+      console.error(error); // Optional: log the error for debugging
+    }
   };
 
   return (
@@ -64,10 +67,6 @@ const Auth = () => {
             boxShadow: 3,
           }}
         >
-          {/* <Typography variant="h4" gutterBottom align="center" color="primary">
-            {activeTab === 0 ? 'Login' : 'Register'}
-          </Typography> */}
-          
           <Tabs
             value={activeTab}
             onChange={handleTabChange}

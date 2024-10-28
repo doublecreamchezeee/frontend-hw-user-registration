@@ -25,7 +25,7 @@ const Auth = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const url = `${process.env.API_URL}/${activeTab === 0 ? 'login' : 'register'}`;
+    const url = `${process.env.REACT_APP_API_URL}/${activeTab === 0 ? 'login' : 'register'}`;
 
     const response = await fetch(url, {
       method: 'POST',

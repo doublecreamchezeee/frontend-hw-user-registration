@@ -8,20 +8,41 @@ import {
   Card,
   CardContent,
 } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-const Home = () => {
+const Home = ({ setIsLogin }) => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    setIsLogin(false);
+    navigate('/');
+  };
+
   return (
     <Box
       sx={{
-        background: 'linear-gradient(135deg, #ff4e5f, #feb479)', 
+        background: 'linear-gradient(135deg, #ff4e5f, #feb479)',
         minHeight: '100vh',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         color: '#fff',
+        position: 'relative',
       }}
     >
+      <Button
+        onClick={handleLogout}
+        sx={{
+          position: 'absolute',
+          top: 16,
+          right: 16,
+          color: '#fff',
+          textTransform: 'none',
+        }}
+      >
+        Logout
+      </Button>
+
       <Container maxWidth="md">
         <Typography variant="h3" gutterBottom align="center">
           Welcome to the Home Page
@@ -41,7 +62,6 @@ const Home = () => {
           <Button
             variant="contained"
             color="primary"
-            component={Link}
             sx={{
               backgroundColor: '#ff7e4f',
               '&:hover': {
@@ -54,7 +74,6 @@ const Home = () => {
           <Button
             variant="outlined"
             color="inherit"
-            component={Link}
             sx={{
               borderColor: '#fff',
               color: '#fff',

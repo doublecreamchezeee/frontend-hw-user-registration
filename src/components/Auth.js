@@ -10,9 +10,8 @@ import {
   Tab,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios'; // Import axios
 
-const Auth = () => {
+const Auth = ({ setIsLogin }) => {
   const [activeTab, setActiveTab] = useState(0);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -27,7 +26,7 @@ const Auth = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const url = `${process.env.REACT_APP_API_URL}/${activeTab === 0 ? 'login' : 'register'}`;
-  
+    let message = "";
     try {
       const response = await fetch(url, {
         method: 'POST',
@@ -41,15 +40,20 @@ const Auth = () => {
   
       if (response.ok) {
         const data = await response.json();
-        // Handle success, e.g., navigate to home
+        setIsLogin(true);
         navigate('/home');
       } else {
         const errorData = await response.json();
-        setMessage(errorData.message || 'Authentication failed. Please try again.');
+        console.log("Error: " + errorData.message)
+        if (!errorData.data)
+            message = errorData.message;
+        else
+          message = errorData.message + ": " + errorData.data.message; 
+        setMessage(message);
       }
     } catch (error) {
-      setMessage('Authentication failed. Please try again.');
-      console.error(error); // Log the error for debugging
+      setMessage("Validate error");
+      console.error(error);
     }
   };
 

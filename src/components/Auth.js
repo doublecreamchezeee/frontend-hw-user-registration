@@ -2,14 +2,12 @@
 import React, { useState } from 'react';
 import {
   Container,
-  TextField,
-  Button,
-  Typography,
   Box,
   Tabs,
   Tab,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import AuthForm from './AuthForm'; // Import the AuthForm component
 
 const Auth = ({ setIsLogin }) => {
   const [activeTab, setActiveTab] = useState(0);
@@ -32,23 +30,23 @@ const Auth = ({ setIsLogin }) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          // 'Access-Control-Allow-Origin': '*', // Do not set this here; it's handled by the server
         },
         mode: 'cors', // Set mode to 'cors' for cross-origin requests
         body: JSON.stringify({ email, password }),
       });
-  
+
       if (response.ok) {
         const data = await response.json();
         setIsLogin(true);
         navigate('/home');
       } else {
         const errorData = await response.json();
-        console.log("Error: " + errorData.message)
-        if (!errorData.data)
-            message = errorData.message;
-        else
+        console.log("Error: " + errorData.message);
+        if (!errorData.data) {
+          message = errorData.message;
+        } else {
           message = errorData.message + ": " + errorData.data.message; 
+        }
         setMessage(message);
       }
     } catch (error) {
@@ -98,48 +96,14 @@ const Auth = ({ setIsLogin }) => {
             <Tab label="Register" />
           </Tabs>
 
-          <form onSubmit={handleSubmit}>
-            <TextField
-              label="Email"
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <TextField
-              label="Password"
-              type="password"
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <Button
-              variant="contained"
-              fullWidth
-              type="submit"
-              sx={{
-                backgroundColor: '#ff7e5f',
-                color: '#fff',
-                marginTop: 2,
-                '&:hover': {
-                  backgroundColor: '#feb47b',
-                },
-              }}
-            >
-              {activeTab === 0 ? 'Login' : 'Register'}
-            </Button>
-          </form>
-
-          {message && (
-            <Typography variant="body2" color="error" sx={{ marginTop: 2, textAlign: 'center' }}>
-              {message}
-            </Typography>
-          )}
+          <AuthForm 
+            email={email}
+            password={password}
+            setEmail={setEmail}
+            setPassword={setPassword}
+            message={message}
+            handleSubmit={handleSubmit}
+          />
         </Box>
       </Container>
     </Box>

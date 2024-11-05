@@ -44,9 +44,9 @@ const Auth = () => {
           console.log('token', data.data.token);
           localStorage.setItem('email', email)
           setToken(data.data.token);
-          navigate('/home');
-        } else {
           navigate('/');
+        } else {
+          navigate('/login');
         }
       } else {
         setMessage(data.message || 'Authentication failed');

@@ -10,13 +10,15 @@ import {
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+
 const Home = () => {
-  const { setToken } = useAuth();
+  const { token, setToken } = useAuth();
   const navigate = useNavigate();
+
   const handleLogout = () => {
     localStorage.removeItem('token');
     setToken("");
-    navigate('/')
+    navigate('/');
   };
 
   return (
@@ -31,18 +33,49 @@ const Home = () => {
         position: 'relative',
       }}
     >
-      <Button
-        onClick={handleLogout}
-        sx={{
-          position: 'absolute',
-          top: 16,
-          right: 16,
-          color: '#fff',
-          textTransform: 'none',
-        }}
-      >
-        Logout
-      </Button>
+      {token ? (
+        <Button
+          onClick={handleLogout}
+          sx={{
+            position: 'absolute',
+            top: 16,
+            right: 16,
+            color: '#fff',
+            textTransform: 'none',
+          }}
+        >
+          Logout
+        </Button>
+      ) : (
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 16,
+            right: 16,
+            display: 'flex',
+            gap: 2,
+          }}
+        >
+          <Button
+            onClick={() => navigate('/login')}
+            sx={{ color: '#fff', textTransform: 'none' }}
+          >
+            Login
+          </Button>
+          <Button
+            onClick={() => navigate('/register')}
+            sx={{ color: '#fff', textTransform: 'none' }}
+          >
+            Register
+          </Button>
+          <Button
+            onClick={() => navigate('/profile')}
+            sx={{ color: '#fff', textTransform: 'none' }}
+          >
+            Profile
+          </Button>
+        </Box>
+      )}
 
       <Container maxWidth="md">
         <Typography variant="h3" gutterBottom align="center">

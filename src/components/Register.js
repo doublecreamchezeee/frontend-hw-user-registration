@@ -2,13 +2,14 @@
 import React, { useState } from 'react';
 import { Container, Box, Typography, Button, TextField } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
 
 const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
-
+  const {enqueueSnackbar} = useSnackbar()
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage('');
@@ -24,10 +25,13 @@ const Register = () => {
 
       if (response.ok) {
         navigate('/login');
+        enqueueSnackbar('Register successful', {variant: 'success'})
       } else {
+        enqueueSnackbar(`${data.message}`, {variant: 'error'})
         setMessage(data.message || 'Registration failed');
       }
     } catch (error) {
+      enqueueSnackbar(`An error occurred. Please try again.`, {variant: 'error'})
       setMessage('An error occurred. Please try again.');
       console.error(error);
     }

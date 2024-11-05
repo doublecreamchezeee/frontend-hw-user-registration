@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { SnackbarProvider } from 'notistack'
 import Profile from './components/Profile';
 import Home from './components/Home';
 import Login from './components/Login';
@@ -28,16 +29,18 @@ const AuthRoute = ({ children }) => {
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <Routes>
-          <Route path='/register' element={<AuthRoute><Register /></AuthRoute>}/>
-          <Route path="/login" element={<AuthRoute><Login /></AuthRoute>}/>
-          <Route path="/" element={<Home/>} />
-          <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
-        </Routes>
-      </Router>
-    </AuthProvider>
+    <SnackbarProvider maxSnack={3} autoHideDuration={3000}>
+      <AuthProvider>
+        <Router>
+          <Routes>
+            <Route path='/register' element={<AuthRoute><Register /></AuthRoute>}/>
+            <Route path="/login" element={<AuthRoute><Login /></AuthRoute>}/>
+            <Route path="/" element={<Home/>} />
+            <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
+          </Routes>
+        </Router>
+      </AuthProvider>
+    </SnackbarProvider>
   );
 }
 

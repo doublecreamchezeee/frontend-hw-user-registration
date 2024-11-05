@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Container, Box, Typography, Button, TextField } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useSnackbar } from 'notistack';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -10,7 +11,7 @@ const Login = () => {
   const [message, setMessage] = useState('');
   const { setToken } = useAuth();
   const navigate = useNavigate();
-
+  const { enqueueSnackbar } = useSnackbar();
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage('');
@@ -27,11 +28,14 @@ const Login = () => {
       if (response.ok) {
         setToken(data.data.token);
         localStorage.setItem('email', email);
+        enqueueSnackbar('Login successful', {variant: 'success'})
         navigate('/');
       } else {
+        enqueueSnackbar(`${data.message}`, {variant: 'error'})
         setMessage(data.message || 'Authentication failed');
       }
     } catch (error) {
+      enqueueSnackbar(`An error occurred. Please try again.`, {variant: 'error'})
       setMessage('An error occurred. Please try again.');
       console.error(error);
     }

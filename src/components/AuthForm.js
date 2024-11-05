@@ -1,4 +1,3 @@
-// src/components/AuthForm.js
 import React from 'react';
 import { TextField, Button, Typography, Box } from '@mui/material';
 

@@ -9,13 +9,14 @@ import {
   CardContent,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-
-const Home = ({ setIsLogin }) => {
+import { useAuth } from '../context/AuthContext';
+const Home = () => {
+  const { setToken } = useAuth();
   const navigate = useNavigate();
-
   const handleLogout = () => {
-    setIsLogin(false);
-    navigate('/');
+    localStorage.removeItem('token');
+    setToken("");
+    navigate('/')
   };
 
   return (
@@ -68,8 +69,9 @@ const Home = ({ setIsLogin }) => {
                 backgroundColor: '#feb47b',
               },
             }}
+            onClick={() => navigate('/profile')}
           >
-            Learn More
+            Profile
           </Button>
           <Button
             variant="outlined"

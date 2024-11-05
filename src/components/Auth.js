@@ -1,20 +1,18 @@
-// src/components/Auth.js
 import React, { useState } from 'react';
-import {
-  Container,
-  Box,
-  Tabs,
-  Tab,
-} from '@mui/material';
+import { Container, Box, Tabs, Tab } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import AuthForm from './AuthForm'; // Import the AuthForm component
+import AuthForm from './AuthForm';
+import { useAuth } from '../context/AuthContext';
 
-const Auth = ({ setIsLogin }) => {
+const Auth = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
+  const { setToken } = useAuth();
   const navigate = useNavigate();
+  
+  // console.log('token from storage: ',localStorage.getItem('token'))
 
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
@@ -23,37 +21,42 @@ const Auth = ({ setIsLogin }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const url = `${process.env.REACT_APP_API_URL}/${activeTab === 0 ? 'login' : 'register'}`;
-    let message = "";
+    const endpoint = activeTab === 0 ? 'login' : 'register';
+    setMessage('');
+  
+    await authenticateUser(endpoint);
+  };
+  
+  const authenticateUser = async (endpoint) => {
+    const url = `${process.env.REACT_APP_API_URL}/auth/${endpoint}`;
     try {
       const response = await fetch(url, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        mode: 'cors', // Set mode to 'cors' for cross-origin requests
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       });
-
+      const data = await response.json();
+  
       if (response.ok) {
-        const data = await response.json();
-        setIsLogin(true);
-        navigate('/home');
-      } else {
-        const errorData = await response.json();
-        console.log("Error: " + errorData.message);
-        if (!errorData.data) {
-          message = errorData.message;
+        console.log('response data: ', data);
+        
+        if (endpoint === 'login') {
+          console.log('token', data.data.token);
+          localStorage.setItem('email', email)
+          setToken(data.data.token);
+          navigate('/home');
         } else {
-          message = errorData.message + ": " + errorData.data.message; 
+          navigate('/');
         }
-        setMessage(message);
+      } else {
+        setMessage(data.message || 'Authentication failed');
       }
     } catch (error) {
-      setMessage("Validate error");
+      setMessage('An error occurred. Please try again.');
       console.error(error);
     }
   };
+  
 
   return (
     <Box
@@ -96,7 +99,7 @@ const Auth = ({ setIsLogin }) => {
             <Tab label="Register" />
           </Tabs>
 
-          <AuthForm 
+          <AuthForm
             email={email}
             password={password}
             setEmail={setEmail}

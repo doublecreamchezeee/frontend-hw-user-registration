@@ -7,7 +7,9 @@ import Home from './components/Home';
 
 const PrivateRoute = ({ children }) => {
   const { token, validateToken } = useAuth();
-  if (token && !validateToken(token)){
+  console.log(token);
+  console.log(validateToken(token))
+  if (!token || !validateToken(token)){
     return <Navigate to="/" />
   }
   return children;

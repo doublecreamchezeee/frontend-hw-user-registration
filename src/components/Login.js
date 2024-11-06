@@ -31,8 +31,8 @@ const Login = () => {
         enqueueSnackbar('Login successful', {variant: 'success'})
         navigate('/');
       } else {
-        enqueueSnackbar(`${data.message}`, {variant: 'error'})
-        setMessage(data.message || 'Authentication failed');
+        enqueueSnackbar(`${data.data.message}`, {variant: 'error'})
+        setMessage(data.data.message || 'Authentication failed');
       }
     } catch (error) {
       enqueueSnackbar(`An error occurred. Please try again.`, {variant: 'error'})

@@ -79,7 +79,7 @@ const Profile = () => {
               backgroundColor: '#feb47b',
             },
           }}
-          onClick={() => navigate('/home')}
+          onClick={() => navigate('/')}
         >
           Back to Home
         </Button>
